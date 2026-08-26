@@ -1,0 +1,655 @@
+/* ============================================================
+   pages-love.css — 恋爱主题应用（恋爱日记 / 心动测试 / 每日情话 / 恋爱运势）
+   设计语言：毛玻璃卡片 + 主题变量（--primary / --glass-*），与全站一致
+   ============================================================ */
+
+/* ---------- 通用页面容器 ---------- */
+.love-page-container {
+  padding: 16px 16px calc(120px + env(safe-area-inset-bottom));
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.love-empty {
+  padding: 40px 20px;
+  text-align: center;
+  color: var(--text-light, #9aa3b0);
+  font-size: 0.9rem;
+}
+
+/* ============================================================
+   1. 恋爱日记
+   ============================================================ */
+.love-diary-composer {
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.love-diary-input {
+  width: 100%;
+  border: none;
+  outline: none;
+  resize: none;
+  background: rgba(255,255,255,0.55);
+  border-radius: 14px;
+  padding: 12px 14px;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: var(--text-dark, #3A4050);
+  font-family: inherit;
+  box-sizing: border-box;
+}
+
+.love-diary-input::placeholder {
+  color: var(--text-light, #9aa3b0);
+}
+
+.love-diary-composer-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.love-diary-mood-select {
+  appearance: none;
+  -webkit-appearance: none;
+  border: var(--glass-border, 1px solid rgba(255,255,255,0.6));
+  background: var(--glass-bg, rgba(255,255,255,0.5));
+  border-radius: var(--radius-full, 999px);
+  padding: 8px 14px;
+  font-size: 0.85rem;
+  color: var(--text-dark, #3A4050);
+  cursor: pointer;
+  outline: none;
+  flex-shrink: 0;
+}
+
+.love-diary-date-hint {
+  flex: 1;
+  text-align: right;
+  font-size: 0.8rem;
+  color: var(--text-light, #9aa3b0);
+}
+
+.love-diary-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.love-diary-item {
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.love-diary-item-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.love-diary-mood {
+  font-size: 1.15rem;
+  line-height: 1;
+}
+
+.love-diary-date {
+  flex: 1;
+  font-size: 0.78rem;
+  color: var(--text-light, #9aa3b0);
+}
+
+.love-diary-del {
+  border: none;
+  background: transparent;
+  color: var(--text-light, #9aa3b0);
+  font-size: 0.9rem;
+  cursor: pointer;
+  padding: 4px 6px;
+  border-radius: 8px;
+  transition: color 0.2s, background 0.2s;
+}
+
+.love-diary-del:hover {
+  color: #e07a7a;
+  background: rgba(224,122,122,0.12);
+}
+
+.love-diary-text {
+  font-size: 0.92rem;
+  line-height: 1.7;
+  color: var(--text-dark, #3A4050);
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+/* ============================================================
+   2. 心动测试
+   ============================================================ */
+.love-test-progress {
+  height: 6px;
+  border-radius: 3px;
+  background: rgba(255,255,255,0.5);
+  overflow: hidden;
+}
+
+.love-test-progress-bar {
+  height: 100%;
+  border-radius: 3px;
+  background: linear-gradient(90deg, var(--primary, #B8DCF0), var(--primary-dark, #98C0D8));
+  transition: width 0.3s ease;
+}
+
+.love-test-card {
+  padding: 18px 16px;
+}
+
+.love-test-step {
+  font-size: 0.78rem;
+  color: var(--text-light, #9aa3b0);
+  margin-bottom: 8px;
+}
+
+.love-test-question {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--text-dark, #3A4050);
+  line-height: 1.6;
+  margin-bottom: 16px;
+}
+
+.love-test-option {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  text-align: left;
+  border: var(--glass-border, 1px solid rgba(255,255,255,0.6));
+  background: rgba(255,255,255,0.45);
+  border-radius: 14px;
+  padding: 13px 16px;
+  margin-bottom: 10px;
+  font-size: 0.92rem;
+  color: var(--text-dark, #3A4050);
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: inherit;
+}
+
+.love-test-option:hover {
+  background: var(--bg-card-hover, rgba(255,255,255,0.75));
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md, 0 4px 14px rgba(0,0,0,0.06));
+}
+
+.love-test-option:active {
+  transform: scale(0.98);
+}
+
+.love-test-option.selected {
+  border-color: var(--primary-dark, #98C0D8);
+  background: var(--primary-soft, #A6CAE4);
+  color: #fff;
+  font-weight: 600;
+}
+
+.love-test-nav {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  margin-top: 6px;
+}
+
+.love-test-result {
+  text-align: center;
+  padding: 8px 0 4px;
+}
+
+.love-test-result-icon {
+  font-size: 3rem;
+  margin-bottom: 8px;
+}
+
+.love-test-result-title {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--text-dark, #3A4050);
+  margin-bottom: 6px;
+}
+
+.love-test-result-type {
+  display: inline-block;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #fff;
+  background: linear-gradient(135deg, var(--primary, #B8DCF0), var(--primary-dark, #98C0D8));
+  border-radius: 999px;
+  padding: 5px 14px;
+  margin-bottom: 14px;
+}
+
+.love-test-result-desc {
+  font-size: 0.92rem;
+  line-height: 1.75;
+  color: var(--text-medium, #606878);
+  text-align: left;
+  margin-bottom: 14px;
+}
+
+.love-test-result-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+  margin-bottom: 18px;
+}
+
+.love-test-tag {
+  font-size: 0.8rem;
+  color: var(--text-medium, #606878);
+  background: rgba(255,255,255,0.5);
+  border: var(--glass-border, 1px solid rgba(255,255,255,0.6));
+  border-radius: 999px;
+  padding: 5px 12px;
+}
+
+/* ============================================================
+   3. 每日情话
+   ============================================================ */
+.sweet-card {
+  padding: 34px 22px;
+  text-align: center;
+  min-height: 190px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 14px;
+  position: relative;
+}
+
+.sweet-card::before,
+.sweet-card::after {
+  content: '♥';
+  position: absolute;
+  font-size: 1.4rem;
+  color: rgba(224,122,122,0.28);
+}
+
+.sweet-card::before {
+  top: 14px;
+  left: 18px;
+}
+
+.sweet-card::after {
+  bottom: 12px;
+  right: 18px;
+  transform: rotate(180deg);
+}
+
+.sweet-quote {
+  font-size: 1.15rem;
+  line-height: 1.9;
+  font-weight: 600;
+  color: var(--text-dark, #3A4050);
+  word-break: break-word;
+}
+
+.sweet-source {
+  font-size: 0.8rem;
+  color: var(--text-light, #9aa3b0);
+}
+
+.sweet-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+}
+
+.sweet-actions .glass-btn {
+  flex: 1;
+  max-width: 180px;
+}
+
+.sweet-tip {
+  text-align: center;
+  font-size: 0.78rem;
+  color: var(--text-light, #9aa3b0);
+}
+
+/* ============================================================
+   4. 恋爱运势
+   ============================================================ */
+.fortune-card {
+  padding: 20px 18px;
+}
+
+.fortune-date {
+  text-align: center;
+  font-size: 0.8rem;
+  color: var(--text-light, #9aa3b0);
+  margin-bottom: 16px;
+}
+
+.fortune-score-row {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-bottom: 18px;
+}
+
+.fortune-score-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.fortune-score-label {
+  width: 64px;
+  flex-shrink: 0;
+  font-size: 0.85rem;
+  color: var(--text-medium, #606878);
+}
+
+.fortune-score-track {
+  flex: 1;
+  height: 10px;
+  border-radius: 5px;
+  background: rgba(255,255,255,0.5);
+  overflow: hidden;
+}
+
+.fortune-score-bar {
+  height: 100%;
+  border-radius: 5px;
+  background: linear-gradient(90deg, var(--primary, #B8DCF0), var(--primary-dark, #98C0D8));
+  transition: width 0.6s ease;
+}
+
+.fortune-score-num {
+  width: 44px;
+  flex-shrink: 0;
+  text-align: right;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--text-dark, #3A4050);
+}
+
+.fortune-info-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.fortune-info-item {
+  text-align: center;
+  background: rgba(255,255,255,0.45);
+  border: var(--glass-border, 1px solid rgba(255,255,255,0.6));
+  border-radius: 14px;
+  padding: 12px 6px;
+}
+
+.fortune-info-label {
+  font-size: 0.75rem;
+  color: var(--text-light, #9aa3b0);
+  margin-bottom: 6px;
+}
+
+.fortune-info-value {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text-dark, #3A4050);
+}
+
+.fortune-advice {
+  font-size: 0.9rem;
+  line-height: 1.75;
+  color: var(--text-medium, #606878);
+  background: rgba(255,255,255,0.4);
+  border-radius: 14px;
+  padding: 14px 16px;
+  margin-bottom: 18px;
+}
+
+.fortune-advice strong {
+  color: var(--text-dark, #3A4050);
+}
+
+.fortune-actions {
+  display: flex;
+  justify-content: center;
+}
+
+.fortune-actions .glass-btn {
+  max-width: 220px;
+  flex: 1;
+}
+
+/* ---------- 小屏适配 ---------- */
+@media (max-width: 360px) {
+  .love-diary-composer-bar {
+    flex-wrap: wrap;
+  }
+  .love-diary-date-hint {
+    order: 3;
+    flex-basis: 100%;
+    text-align: left;
+  }
+  .sweet-quote {
+    font-size: 1.02rem;
+  }
+}
+
+/* ============================================================
+   5. 情侣默契挑战
+   ============================================================ */
+.match-stats {
+  display: flex;
+  gap: 10px;
+}
+
+.match-stat-item {
+  flex: 1;
+  padding: 12px 6px;
+  border-radius: var(--radius-md);
+  text-align: center;
+}
+
+.match-stat-num {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--primary);
+}
+
+.match-stat-label {
+  font-size: 0.72rem;
+  color: var(--text-light, #9aa3b0);
+  margin-top: 2px;
+}
+
+.match-intro {
+  padding: 22px 18px;
+  text-align: center;
+}
+
+.match-intro-icon {
+  font-size: 2.4rem;
+  color: var(--primary);
+  margin-bottom: 10px;
+}
+
+.match-intro-title {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--text-dark, #3A4050);
+  margin-bottom: 6px;
+}
+
+.match-intro-desc {
+  font-size: 0.82rem;
+  color: var(--text-light, #9aa3b0);
+  line-height: 1.7;
+}
+
+.match-tip {
+  text-align: center;
+  font-size: 0.78rem;
+  color: var(--primary);
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+.match-progress {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 2px;
+}
+
+.match-progress-track {
+  flex: 1;
+  height: 6px;
+  border-radius: 999px;
+  background: rgba(var(--primary-rgb), 0.15);
+  overflow: hidden;
+}
+
+.match-progress-bar {
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--primary), rgba(var(--primary-rgb), 0.6));
+  transition: width 0.3s ease;
+}
+
+.match-progress-text {
+  font-size: 0.75rem;
+  color: var(--text-light, #9aa3b0);
+  white-space: nowrap;
+}
+
+.match-question {
+  padding: 18px 16px;
+}
+
+.match-question-role {
+  font-size: 0.75rem;
+  color: var(--primary);
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.match-question-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-dark, #3A4050);
+  line-height: 1.5;
+  margin-bottom: 14px;
+}
+
+.match-options {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.match-option {
+  text-align: left;
+  padding: 12px 14px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-medium, rgba(0,0,0,0.08));
+  background: rgba(255,255,255,0.5);
+  color: var(--text-dark, #3A4050);
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: inherit;
+}
+
+.match-option:active {
+  transform: scale(0.98);
+}
+
+.match-actions {
+  display: flex;
+  justify-content: center;
+}
+
+.match-actions .glass-btn {
+  max-width: 240px;
+  flex: 1;
+}
+
+.match-result {
+  padding: 26px 18px;
+  text-align: center;
+}
+
+.match-result-score {
+  font-size: 3rem;
+  font-weight: 800;
+  color: var(--primary);
+  line-height: 1;
+}
+
+.match-result-label {
+  color: var(--text-light, #9aa3b0);
+  font-size: 0.82rem;
+  margin-top: 6px;
+}
+
+.match-result-comment {
+  font-size: 0.92rem;
+  color: var(--text-dark, #3A4050);
+  margin-top: 12px;
+  line-height: 1.6;
+}
+
+.match-compare {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.match-compare-item {
+  padding: 12px 14px;
+  border-radius: var(--radius-md);
+}
+
+.match-compare-q {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-dark, #3A4050);
+  margin-bottom: 8px;
+}
+
+.match-compare-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.8rem;
+  color: var(--text-light, #9aa3b0);
+  margin-bottom: 4px;
+}
+
+.match-compare-row .mark {
+  width: 18px;
+  text-align: center;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.match-compare-row .mark.ok {
+  color: #10B981;
+}
+
+.match-compare-row .mark.no {
+  color: #EF4444;
+}
+
+.match-compare-answer {
+  flex: 1;
+}
