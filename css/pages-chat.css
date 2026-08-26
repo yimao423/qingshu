@@ -1,0 +1,494 @@
+/* ===== 聊天页 ===== */
+.chat-list {
+  padding: 0;
+}
+
+.chat-item {
+  display: flex;
+  align-items: center;
+  padding: 12px 16px;
+  gap: 12px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.chat-item:hover {
+  background: rgba(0,0,0,0.02);
+}
+
+.chat-item:active {
+  background: rgba(0,0,0,0.05);
+}
+
+.chat-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  color: #fff;
+  font-weight: 600;
+  overflow: hidden;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.chat-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.chat-name {
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: var(--text-dark);
+}
+
+.chat-preview {
+  font-size: 0.78rem;
+  color: var(--text-light);
+  margin-top: 2px;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.chat-meta {
+  text-align: right;
+  flex-shrink: 0;
+}
+
+.chat-time {
+  font-size: 0.68rem;
+  color: var(--text-lighter);
+}
+
+.chat-badge {
+  display: inline-block;
+  min-width: 18px;
+  height: 18px;
+  background: var(--primary);
+  color: #fff;
+  border-radius: 9px;
+  font-size: 0.6rem;
+  text-align: center;
+  line-height: 18px;
+  padding: 0 5px;
+  margin-top: 4px;
+}
+
+/* 对话框 */
+.chat-room {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+
+.message-row {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 8px;
+  max-width: 78%;
+}
+
+.message-row.self {
+  align-self: flex-end;
+  flex-direction: row-reverse;
+  align-items: flex-start;
+}
+
+.message-row.other {
+  align-self: flex-start;
+  align-items: flex-start;
+}
+
+/* 消息头像（与气泡顶部持平） */
+.message-avatar {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  color: #fff;
+  font-weight: 600;
+  overflow: hidden;
+  margin-top: 2px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.10);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  user-select: none;
+}
+
+/* 消息主体：气泡/内容 + 时间 */
+.message-body {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 3px;
+  min-width: 0;
+  max-width: calc(100% - 46px);
+}
+
+.message-row.self .message-body {
+  align-items: flex-end;
+}
+
+.message-bubble {
+  /* 字体对齐 ZY3（ZY3 --message-font-family: 'Noto Serif SC', serif；index.html 已引入 Noto Serif SC） */
+  font-family: 'Noto Serif SC', 'Songti SC', 'STSong', 'SimSun', serif;
+  /* 目标气泡基础：padding / line-height / margin 以 ZY3 .message 为准 */
+  /* padding 12px 18px（对齐 ZY3 .message padding: 12px 18px） */
+  padding: 12px 18px;
+  border-radius: 18px;  /* 对齐 ZY3 var(--radius)=18px */
+  font-size: 16px;  /* 气泡字号恢复 16px */
+  line-height: 1.5;
+  /* margin-top 与头像持平（头像 margin-top:2px），底部保留目标 CSS 的 4px 间距 */
+  margin: 2px 0 4px;
+  /* 断句规则：中文短句优先整行显示，不在字符间随意断开；
+     仅在标点/空格处断行，超长单词、URL 放不下时才强制换行；
+     对齐 ZY3：不设 line-break strict（移动端旧内核下 strict 会引发中文意外断行） */
+  word-break: normal;
+  overflow-wrap: break-word;
+  white-space: normal;
+  position: relative;
+  overflow: hidden;  /* 对齐 ZY3 .message overflow: hidden */
+  /* 三层阴影（主题色投影 + 微投影 + 内描边高光）；
+     backdrop-filter 已移除：旧 WebView 不支持时整条规则失效，且 ZY3 无毛玻璃 */
+  box-shadow: 0 3px 12px rgba(var(--primary-rgb), 0.12), 0 1px 2px rgba(0, 0, 0, 0.03), inset 0 1px 0 rgba(255, 255, 255, 0.28);
+}
+
+/* 气泡文本独立层：块级 div（对齐 ZY3 的文本 div），规避 span/匿名 flex item 在旧内核（雨见/老WebView）上的断行缺陷 */
+.message-bubble .bubble-text,
+.message-bubble .msg-quote-ref {
+  word-break: normal;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  white-space: normal;
+  min-width: 0;
+  max-width: 100%;
+}
+
+/* 默认气泡（非微信CSS导入/非语音/非图片）：块级布局，文本顶部对齐（对齐 ZY3 .message） */
+
+
+
+/* 默认气泡（目标样式）：主题渐变 + ♥ 心跳 + SVG 波浪线，颜色随主题变量变化
+   对应目标 .message.message-received / .message.message-sent；
+   :not(.message) 排除微信 CSS 气泡；排除语音/CSS导入/图片气泡（各自布局不受影响）；带引用块的气泡同样应用目标样式 */
+.message-row.self .message-bubble:not(.message):not(.voice-bubble):not(.css-bubble):not(.image-bubble) {
+  background: radial-gradient(circle at 85% 80%, rgba(255,255,255,.4) 0%, transparent 35%),
+              radial-gradient(circle at 20% 30%, rgba(255,255,255,.2) 0%, transparent 30%),
+              linear-gradient(145deg, rgba(var(--primary-rgb), .5) 0%, rgba(var(--primary-rgb), .4) 55%, rgba(var(--primary-rgb), .48) 100%);
+  border: 1px solid rgba(var(--primary-rgb), .38);
+  border-radius: 18px 18px 6px 18px;  /* 对齐 ZY3 sent：右下角 6px */
+}
+/* 发送气泡：右上角 ♥ 心跳（颜色随主题） */
+.message-row.self .message-bubble:not(.message):not(.voice-bubble):not(.css-bubble):not(.image-bubble)::before {
+  content: '♥';
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  font-size: 9px;
+  line-height: 1;
+  color: rgba(var(--primary-rgb), .7);
+  text-shadow: 0 0 6px rgba(var(--primary-rgb), .4), 0 0 10px rgba(var(--primary-rgb), .2);
+  animation: none; /* 心跳限流：仅最近 6 条播放心跳（见下方 nth-last-child 规则） */
+  z-index: 2;
+}
+/* 发送气泡：左下角 SVG 波浪线（mask 方案：形状固定、主题色填充，scaleX(-1) 镜像翻转） */
+.message-row.self .message-bubble:not(.message):not(.voice-bubble):not(.css-bubble):not(.image-bubble)::after {
+  content: '';
+  position: absolute;
+  bottom: 2px;
+  left: 6px;
+  width: 28px;
+  height: 10px;
+  background: rgba(var(--primary-rgb), .6);
+  -webkit-mask: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 26' preserveAspectRatio='none'%3E%3Cpolyline points='0,13 30,13 40,13 60,13 70,9 80,17 90,13 110,13 120,13 140,13 160,5 170,21 180,13 200,13' fill='none' stroke='black' stroke-width='1.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") no-repeat center;
+  -webkit-mask-size: 100% 100%;
+  mask: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 26' preserveAspectRatio='none'%3E%3Cpolyline points='0,13 30,13 40,13 60,13 70,9 80,17 90,13 110,13 120,13 140,13 160,5 170,21 180,13 200,13' fill='none' stroke='black' stroke-width='1.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") no-repeat center;
+  mask-size: 100% 100%;
+  pointer-events: none;
+  z-index: 1;
+  transform: scaleX(-1);
+  transform-origin: center;
+}
+
+.message-row.other .message-bubble:not(.message):not(.voice-bubble):not(.css-bubble):not(.image-bubble) {
+  background: radial-gradient(circle at 15% 85%, rgba(255,255,255,.45) 0%, transparent 40%),
+              radial-gradient(circle at 75% 25%, rgba(255,255,255,.25) 0%, transparent 30%),
+              linear-gradient(145deg, rgba(var(--primary-rgb), .55) 0%, rgba(var(--primary-rgb), .4) 55%, rgba(var(--primary-rgb), .48) 100%);
+  border: 1px solid rgba(var(--primary-rgb), .4);
+  border-radius: 18px 18px 18px 6px;  /* 对齐 ZY3 received：左下角 6px */
+}
+/* 接收气泡：左上角 ♥ 心跳（颜色随主题） */
+.message-row.other .message-bubble:not(.message):not(.voice-bubble):not(.css-bubble):not(.image-bubble)::before {
+  content: '♥';
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  font-size: 9px;
+  line-height: 1;
+  color: rgba(var(--primary-rgb), .7);
+  text-shadow: 0 0 6px rgba(var(--primary-rgb), .4), 0 0 10px rgba(var(--primary-rgb), .2);
+  animation: none; /* 心跳限流：仅最近 6 条播放心跳（见下方 nth-last-child 规则） */
+  z-index: 2;
+}
+/* 心跳限流（性能优化第二批 P1-3）：仅最近 6 条消息气泡播放心跳，其余静止（结构/样式不变） */
+.message-row.self:nth-last-child(-n+6) .message-bubble:not(.message):not(.voice-bubble):not(.css-bubble):not(.image-bubble)::before,
+.message-row.other:nth-last-child(-n+6) .message-bubble:not(.message):not(.voice-bubble):not(.css-bubble):not(.image-bubble)::before {
+  animation: heartbeat 2s ease-in-out infinite alternate;
+}
+/* 接收气泡：右下角 SVG 波浪线（mask 方案） */
+.message-row.other .message-bubble:not(.message):not(.voice-bubble):not(.css-bubble):not(.image-bubble)::after {
+  content: '';
+  position: absolute;
+  bottom: 2px;
+  right: 6px;
+  width: 28px;
+  height: 10px;
+  background: rgba(var(--primary-rgb), .6);
+  -webkit-mask: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 26' preserveAspectRatio='none'%3E%3Cpolyline points='0,13 30,13 40,13 60,13 70,9 80,17 90,13 110,13 120,13 140,13 160,5 170,21 180,13 200,13' fill='none' stroke='black' stroke-width='1.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") no-repeat center;
+  -webkit-mask-size: 100% 100%;
+  mask: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 26' preserveAspectRatio='none'%3E%3Cpolyline points='0,13 30,13 40,13 60,13 70,9 80,17 90,13 110,13 120,13 140,13 160,5 170,21 180,13 200,13' fill='none' stroke='black' stroke-width='1.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") no-repeat center;
+  mask-size: 100% 100%;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* ===== 默认浅蓝主题专属覆盖：气泡颜色精确匹配目标 CSS 固定色值（不影响 padding 等高布局）=====
+   目标 .message 使用固定色：我方 rgb(135,206,250) 系、对方 rgb(178,220,235) 系、♥/波浪线 #4FC3F7；
+   默认主题 --primary-rgb=184,220,240 偏白，导致渐变视觉不一致，故此处硬编码目标色值；
+   其余主题仍走上方 rgba(var(--primary-rgb)) 随主题变化 */
+:root[data-theme="default"] .message-row.self .message-bubble:not(.message):not(.voice-bubble):not(.css-bubble):not(.image-bubble) {
+  background: radial-gradient(circle at 85% 80%, rgba(255,255,255,.4) 0%, transparent 35%),
+              radial-gradient(circle at 20% 30%, rgba(255,255,255,.2) 0%, transparent 30%),
+              linear-gradient(145deg, rgba(135,206,250,.5) 0%, rgba(173,216,230,.4) 55%, rgba(185,225,242,.48) 100%);
+  border: 1px solid rgba(135,206,250,.38);
+}
+:root[data-theme="default"] .message-row.self .message-bubble:not(.message):not(.voice-bubble):not(.css-bubble):not(.image-bubble)::before {
+  color: rgba(79,195,247,.7);
+  text-shadow: 0 0 6px rgba(79,195,247,.4), 0 0 10px rgba(79,195,247,.2);
+}
+:root[data-theme="default"] .message-row.self .message-bubble:not(.message):not(.voice-bubble):not(.css-bubble):not(.image-bubble)::after {
+  background: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 26' preserveAspectRatio='none'%3E%3Cpolyline points='0,13 30,13 40,13 60,13 70,9 80,17 90,13 110,13 120,13 140,13 160,5 170,21 180,13 200,13' fill='none' stroke='%234FC3F7' stroke-width='1.4' stroke-linecap='round' stroke-linejoin='round' opacity='0.6'/%3E%3C/svg%3E") no-repeat center;
+  background-size: 100% 100%;
+  -webkit-mask: none;
+  mask: none;
+}
+
+:root[data-theme="default"] .message-row.other .message-bubble:not(.message):not(.voice-bubble):not(.css-bubble):not(.image-bubble) {
+  background: radial-gradient(circle at 15% 85%, rgba(255,255,255,.45) 0%, transparent 40%),
+              radial-gradient(circle at 75% 25%, rgba(255,255,255,.25) 0%, transparent 30%),
+              linear-gradient(145deg, rgba(178,220,235,.55) 0%, rgba(220,240,252,.4) 55%, rgba(195,230,246,.48) 100%);
+  border: 1px solid rgba(173,216,230,.4);
+}
+:root[data-theme="default"] .message-row.other .message-bubble:not(.message):not(.voice-bubble):not(.css-bubble):not(.image-bubble)::before {
+  color: rgba(79,195,247,.7);
+  text-shadow: 0 0 6px rgba(79,195,247,.4), 0 0 10px rgba(79,195,247,.2);
+}
+:root[data-theme="default"] .message-row.other .message-bubble:not(.message):not(.voice-bubble):not(.css-bubble):not(.image-bubble)::after {
+  background: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 26' preserveAspectRatio='none'%3E%3Cpolyline points='0,13 30,13 40,13 60,13 70,9 80,17 90,13 110,13 120,13 140,13 160,5 170,21 180,13 200,13' fill='none' stroke='%234FC3F7' stroke-width='1.4' stroke-linecap='round' stroke-linejoin='round' opacity='0.6'/%3E%3C/svg%3E") no-repeat center;
+  background-size: 100% 100%;
+  -webkit-mask: none;
+  mask: none;
+}
+
+/* CSS 导入气泡（css-bubble 标记类，含微信/非微信风格）自带尾巴样式，禁用默认小三角避免叠加；
+   默认气泡（无 css-bubble 类）保持原样显示小三角；
+   :not(.message) 确保微信 CSS 气泡的 ::after/::before 小尾巴不被隐藏 */
+.message-row.self .message-bubble.css-bubble:not(.message)::after,
+.message-row.other .message-bubble.css-bubble:not(.message)::after,
+.message-row.self .message-bubble.css-bubble:not(.message)::before,
+.message-row.other .message-bubble.css-bubble:not(.message)::before {
+  display: none;
+}
+
+/* 图片消息气泡（chat.js 显式加 .image-bubble）：无气泡尾巴与花饰 */
+.message-bubble.image-bubble::after,
+.message-bubble.image-bubble::before {
+  display: none;
+}
+/* 图片消息气泡本体：无背景/边框/阴影/内边距，仅保留图片自身圆角（对齐 ZY3 .message-image-bubble-none） */
+.message-bubble.image-bubble {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+  border-radius: 0 !important;
+  overflow: visible;
+}
+.message-bubble.image-bubble .message-image {
+  display: block;
+}
+
+.message-time {
+  display: block;
+  font-size: 10px;
+  color: rgba(var(--primary-rgb), .7);
+  margin-top: 2px;
+  text-align: right;
+  letter-spacing: .4px;
+}
+
+/* ♥ 心跳动画（目标样式） */
+@keyframes heartbeat {
+  0%   { transform: scale(1); opacity: .7; }
+  50%  { transform: scale(1.15); opacity: 1; }
+  100% { transform: scale(1); opacity: .7; }
+}
+
+/* 消息底部元信息行（时间 + 已读状态） */
+.message-meta {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  max-width: 100%;
+}
+
+/* 气泡装饰物（绝对定位贴角，不挤占文字与时间戳空间） */
+.bub-deco {
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* 已读状态 */
+.msg-read-status {
+  font-size: 0.6rem;
+  line-height: 1;
+  padding: 0 4px;
+  user-select: none;
+}
+.msg-read-status.msg-read-icon {
+  font-weight: 700;
+  color: var(--text-lighter);
+}
+.msg-read-status.msg-read-icon.read {
+  color: var(--primary, #4C9AFF);
+}
+.msg-read-status.msg-read-icon.read .tick {
+  letter-spacing: -0.12em; /* 两个勾间隔紧凑 */
+}
+.msg-read-status.msg-read-text.read {
+  color: var(--primary, #4C9AFF);
+}
+.msg-read-status.msg-read-text.unread {
+  color: var(--text-lighter);
+}
+
+/* 正在输入提示气泡（输入栏上方） */
+.chat-typing-bubble {
+  display: none;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 16px;
+  animation: typingFadeIn 0.25s ease;
+}
+.chat-typing-bubble .typing-dots {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+}
+.chat-typing-bubble .typing-dots i {
+  width: auto;
+  height: auto;
+  background: transparent;
+  font-style: normal;
+  display: inline-block;
+  font-size: 0.95rem;
+  line-height: 1;
+  color: var(--primary, #E898B8);
+  animation: typingDot 1.2s infinite ease-in-out;
+}
+.chat-typing-bubble .typing-dots i:nth-child(2) { animation-delay: 0.15s; }
+.chat-typing-bubble .typing-dots i:nth-child(3) { animation-delay: 0.3s; }
+.chat-typing-bubble .typing-text {
+  font-size: 0.72rem;
+  color: var(--text-light, #888);
+}
+@keyframes typingDot {
+  0%, 60%, 100% { transform: translateY(0); opacity: 0.55; }
+  30% { transform: translateY(-4px); opacity: 1; }
+}
+@keyframes typingFadeIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* 设置页输入框（自定义正在输入文案等） */
+.chat-settings-input-row {
+  padding: 0 16px 14px;
+}
+.chat-settings-input-row input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 10px 12px;
+  border-radius: 5px;
+  border: 1.5px solid var(--border-medium, rgba(0,0,0,0.1));
+  background: var(--glass-bg, rgba(255,255,255,0.35));
+  color: var(--text-dark);
+  font-size: 0.85rem;
+  outline: none;
+}
+.chat-settings-input-row input:focus {
+  border-color: var(--primary, #4C9AFF);
+}
+
+
+.chat-input-bar .input-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: none;
+  background: transparent;
+  color: var(--text-medium);
+  font-size: 1.15rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: color 0.2s;
+}
+
+.chat-input-bar .input-btn:hover {
+  color: var(--primary);
+}
+
+
+.chat-input-bar .send-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--primary);
+  color: var(--text-on-primary);
+  border: none;
+  font-size: 0.9rem;
+  cursor: pointer;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s, background 0.2s;
+}
+
+.chat-input-bar .send-btn:hover {
+  background: var(--primary-dark);
+}
+
+.chat-input-bar .send-btn:active {
+  transform: scale(0.9);
+}
+
+
