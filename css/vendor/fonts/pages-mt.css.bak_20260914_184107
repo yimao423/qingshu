@@ -1,0 +1,354 @@
+/* ============================================================
+ * pages-mt.css —— 次元镜界传讯 / 时空回响 专用样式（拾心界）
+ * 顶栏渐变只作用于真正的页面顶栏（.mt-top-bar / .mtx-echo-page header），
+ * 不误套内容行，避免出现独立加深色带（规避历史踩坑）。
+ * 全程不依赖 Tailwind，显式 CSS 定位。
+ * ============================================================ */
+
+/* ---------- 遮罩与弹窗 ---------- */
+.mtx-overlay {
+  position: fixed; inset: 0; z-index: 99999;
+  background: rgba(12, 10, 30, 0.62);
+  backdrop-filter: blur(6px);
+  display: flex; align-items: center; justify-content: center;
+  animation: mtxFadeIn .2s ease;
+}
+@keyframes mtxFadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+.mtx-modal {
+  width: min(88vw, 560px);
+  max-height: 78vh;
+  overflow-y: auto;
+  background: var(--theme-card-bg, #ffffff);
+  border: 1px solid var(--theme-border, rgba(120, 100, 160, .25));
+  border-radius: 18px;
+  padding: 18px 16px;
+  color: var(--theme-text, #2b2440);
+  box-shadow: 0 16px 48px rgba(0, 0, 0, .28);
+  box-sizing: border-box;
+}
+.mtx-modal-wide { width: min(92vw, 640px); }
+.mtx-modal-title {
+  font-size: 17px; font-weight: 700; text-align: center;
+  margin-bottom: 10px; color: var(--theme-text, #2b2440);
+}
+.mtx-modal-desc {
+  font-size: 13.5px; line-height: 1.7; text-align: center;
+  color: var(--theme-subtext, #6f6888); margin-bottom: 12px;
+}
+.mtx-modal-desc b { color: var(--theme-primary, #8b6fd7); }
+.mtx-modal-actions {
+  display: flex; gap: 10px; justify-content: center; margin-top: 14px;
+}
+.mtx-btn {
+  border: none; border-radius: 999px; padding: 10px 22px;
+  font-size: 14px; cursor: pointer; transition: opacity .15s;
+  font-family: inherit;
+}
+.mtx-btn:active { opacity: .7; }
+.mtx-btn.primary {
+  background: linear-gradient(135deg, #9a7be8, #7a5ce0);
+  color: #fff; font-weight: 600;
+}
+.mtx-btn.ghost {
+  background: transparent; color: var(--theme-subtext, #6f6888);
+  border: 1px solid var(--theme-border, rgba(120,100,160,.3));
+}
+.mtx-btn.small { padding: 7px 16px; font-size: 13px; }
+.mtx-btn:disabled { opacity: .5; cursor: default; }
+
+/* ---------- 等待动画 ---------- */
+.mtx-wait { text-align: center; padding: 26px 16px; }
+.mtx-wait-spinner {
+  width: 42px; height: 42px; margin: 6px auto 14px;
+  border: 4px solid rgba(138, 110, 215, .25);
+  border-top-color: #8b6fd7;
+  border-radius: 50%;
+  animation: mtxSpin 1s linear infinite;
+}
+@keyframes mtxSpin { to { transform: rotate(360deg); } }
+.mtx-wait-text { font-size: 15px; font-weight: 600; color: var(--theme-text, #2b2440); }
+.mtx-wait-sub { font-size: 12.5px; color: var(--theme-subtext, #6f6888); margin: 6px 0 18px; }
+
+/* ---------- 群聊邀请 ---------- */
+.mtx-invite-list { margin: 6px 0 4px; }
+.mtx-invite-member {
+  display: flex; align-items: center; gap: 10px;
+  padding: 9px 10px; border-radius: 12px;
+  background: var(--theme-card-soft, rgba(120,100,160,.06));
+  margin-bottom: 6px;
+}
+.mtx-invite-idx {
+  width: 22px; height: 22px; border-radius: 50%; flex: none;
+  background: linear-gradient(135deg, #9a7be8, #7a5ce0); color: #fff;
+  font-size: 12px; display: flex; align-items: center; justify-content: center;
+}
+.mtx-invite-name { flex: 1; font-size: 14px; color: var(--theme-text, #2b2440); }
+.mtx-invite-tool { display: flex; gap: 6px; flex: none; }
+.mtx-mini-btn {
+  width: 26px; height: 26px; border-radius: 8px; border: 1px solid var(--theme-border, rgba(120,100,160,.3));
+  background: transparent; color: var(--theme-subtext, #6f6888); cursor: pointer; font-size: 12px;
+}
+.mtx-mini-btn:active { opacity: .6; }
+
+/* ---------- 牌组设置弹窗 ---------- */
+.mtx-seg {
+  display: flex; background: var(--theme-card-soft, rgba(120,100,160,.08));
+  border-radius: 999px; padding: 3px; margin-bottom: 12px;
+}
+.mtx-seg-btn {
+  flex: 1; border: none; background: transparent; padding: 8px 0;
+  border-radius: 999px; font-size: 13.5px; color: var(--theme-subtext, #6f6888);
+  cursor: pointer; font-family: inherit; transition: all .15s;
+}
+.mtx-seg-btn.on {
+  background: linear-gradient(135deg, #9a7be8, #7a5ce0); color: #fff; font-weight: 600;
+}
+.mtx-field { margin-bottom: 12px; }
+.mtx-field-label {
+  font-size: 12.5px; color: var(--theme-subtext, #6f6888); margin-bottom: 7px; padding-left: 2px;
+}
+.mtx-deck-grid {
+  display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px;
+  max-height: 180px; overflow-y: auto; padding: 2px;
+}
+.mtx-deck-opt, .mtx-spread-opt {
+  display: flex; flex-direction: column; gap: 2px;
+  border: 1px solid var(--theme-border, rgba(120,100,160,.28));
+  border-radius: 12px; padding: 9px 11px; cursor: pointer;
+  transition: all .15s;
+}
+.mtx-deck-opt:has(input:checked), .mtx-spread-opt:has(input:checked) {
+  border-color: #8b6fd7; background: rgba(139,111,215,.1);
+}
+.mtx-deck-opt input, .mtx-spread-opt input { display: none; }
+.mtx-deck-name { font-size: 13.5px; font-weight: 600; color: var(--theme-text, #2b2440); }
+.mtx-deck-en { font-size: 11px; color: var(--theme-subtext, #6f6888); }
+.mtx-spread-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
+.mtx-spread-opt { flex-direction: row; align-items: center; justify-content: space-between; padding: 10px 12px; }
+.mtx-spread-opt span { font-size: 13.5px; color: var(--theme-text, #2b2440); }
+.mtx-spread-count { font-size: 11.5px !important; color: var(--theme-subtext, #6f6888) !important; }
+.mtx-rev-field { margin-top: 2px; }
+.mtx-rev { display: flex; align-items: center; gap: 8px; font-size: 13.5px; color: var(--theme-text, #2b2440); cursor: pointer; }
+.mtx-rev input { width: 17px; height: 17px; accent-color: #8b6fd7; }
+.mtx-empty { font-size: 13px; color: var(--theme-subtext, #6f6888); padding: 12px 0; text-align: center; }
+
+/* ---------- 传讯页面（全屏，顶栏/输入栏与外部聊天沉浸式规则一致） ---------- */
+#page-transmit .mtx-chat {
+  position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+  display: flex; flex-direction: column; background: var(--theme-bg, #f6f4fb);
+  z-index: 50;
+}
+/* 顶栏：与外部聊天 .chat-room-topbar 一致——透明沉浸，背景透过，无底色/边框/阴影 */
+.mtx-top-bar {
+  flex: none;
+  display: flex; align-items: center; gap: 8px;
+  height: 48px; padding: 0 12px;
+  background: transparent;
+  backdrop-filter: none; -webkit-backdrop-filter: none;
+  color: var(--theme-text, #2b2440);
+  border-bottom: none;
+  box-shadow: none;
+  z-index: 10;
+}
+.mtx-top-bar .mtx-top-title,
+.mtx-top-bar .mtx-top-sub,
+.mtx-top-bar .mtx-top-btn { text-shadow: 0 1px 2px rgba(0,0,0,.14); }
+.mtx-top-title { flex: 1; text-align: center; font-size: 16px; font-weight: 700; color: inherit; }
+.mtx-top-sub { text-align: center; font-size: 11px; opacity: .8; margin-top: 1px; }
+.mtx-top-btn {
+  width: 32px; height: 32px; flex: none;
+  border: none; background: var(--theme-card-soft, rgba(120,100,160,.1)); border-radius: 50%;
+  color: inherit; font-size: 14px; cursor: pointer; display: flex; align-items: center; justify-content: center;
+}
+.mtx-top-btn:active { opacity: .7; }
+.mtx-top-center { flex: 1; }
+.mtx-settings-btn {
+  width: auto; height: 30px; padding: 0 11px; border-radius: 999px; gap: 4px; font-size: 12px;
+  background: var(--theme-card-soft, rgba(120,100,160,.12)); color: var(--theme-primary, #8b6fd7);
+}
+
+/* 消息流 */
+.mtx-scroll {
+  flex: 1; overflow-y: auto; padding: 14px 14px 10px; -webkit-overflow-scrolling: touch;
+}
+.mt-x-row { display: flex; margin-bottom: 12px; }
+.mt-x-row.system { justify-content: center; }
+.mt-system {
+  font-size: 12px; color: var(--theme-subtext, #6f6888);
+  background: var(--theme-card-soft, rgba(120,100,160,.08));
+  padding: 5px 14px; border-radius: 999px; max-width: 80%; text-align: center;
+}
+.mt-x-row.self { justify-content: flex-end; }
+.mt-x-row.other { justify-content: flex-start; }
+.mt-msg { max-width: 74%; }
+.mt-msg.self {
+  background: linear-gradient(135deg, #9a7be8, #7a5ce0);
+  color: #fff; border-radius: 16px 4px 16px 16px;
+  padding: 9px 13px; box-shadow: 0 3px 12px rgba(122,90,224,.22);
+}
+.mt-msg.other {
+  background: var(--theme-card-bg, #fff);
+  border: 1px solid var(--theme-border, rgba(120,100,160,.2));
+  border-radius: 4px 16px 16px 16px;
+  padding: 10px 12px; color: var(--theme-text, #2b2440);
+}
+.mt-msg-text { font-size: 15px; line-height: 1.6; white-space: pre-wrap; word-break: break-word; }
+.mt-msg-time { font-size: 10.5px; opacity: .72; margin-top: 5px; text-align: right; }
+.mt-msg-sender { font-size: 11.5px; color: var(--theme-primary, #8b6fd7); font-weight: 600; margin-bottom: 4px; }
+.mt-msg-q { font-size: 12px; color: var(--theme-subtext, #6f6888); margin-bottom: 8px; padding: 5px 9px; background: rgba(120,100,160,.06); border-radius: 8px; }
+
+/* 多牌横排卡带 */
+.mt-cards {
+  display: flex; gap: 7px; overflow-x: auto; padding-bottom: 4px; max-width: 100%;
+}
+/* 牌卡：无边框、无圆角、无底色，按原始比例原样展示牌面图片本身 */
+.mt-card { flex: none; width: 96px; }
+.mt-card-img-wrap {
+  width: 96px; height: auto; border-radius: 0; overflow: visible;
+  box-shadow: none; background: transparent;
+}
+.mt-card-img-wrap.reversed img { transform: rotate(180deg); }
+.mt-card-img { width: 100%; height: auto; object-fit: contain; display: block; }
+
+.mt-btn {
+  border: none; border-radius: 999px; padding: 8px 18px; font-size: 13px; cursor: pointer;
+  font-family: inherit; transition: opacity .15s;
+}
+.mt-btn:active { opacity: .7; }
+.mt-btn.primary { background: linear-gradient(135deg, #9a7be8, #7a5ce0); color: #fff; font-weight: 600; }
+.mt-btn.ghost { background: transparent; color: var(--theme-subtext, #6f6888); border: 1px solid var(--theme-border, rgba(120,100,160,.3)); }
+
+/* 输入区：与外部聊天 .chat-input-zone/.chat-input-bar 一致——透明沉浸无白底无分隔线 */
+.mtx-input-zone {
+  flex: none;
+  display: flex; align-items: center; gap: 6px;
+  padding: 8px 12px calc(8px + env(safe-area-inset-bottom, 0px));
+  background: transparent;
+  backdrop-filter: none; -webkit-backdrop-filter: none;
+  border-top: none;
+  flex-shrink: 0;
+}
+/* 输入栏左侧图标按钮（背景设置入口），与外部 .input-btn 一致 */
+.mtx-input-btn {
+  width: 36px; height: 36px; flex: none;
+  border: none; background: transparent; border-radius: 50%;
+  cursor: pointer; font-size: 1.22rem;
+  color: var(--theme-subtext, #6f6888);
+  display: flex; align-items: center; justify-content: center;
+}
+.mtx-input-btn:active { opacity: .7; }
+.mtx-input {
+  flex: 1; resize: none; border: none; border-radius: 5px;
+  background: transparent;
+  color: var(--theme-text, #2b2440); font-size: 15px; line-height: 1.5;
+  padding: 9px 14px; max-height: 96px; min-height: 40px; outline: none;
+  font-family: inherit;
+}
+.mtx-input:focus { background: transparent; }
+.mtx-input::placeholder { color: var(--theme-subtext, #9a94b0); }
+.mtx-btn-send {
+  flex: none; width: 36px; height: 36px; border-radius: 50%;
+  border: none; background: var(--primary, #9a7be8);
+  color: var(--text-on-primary, #fff); font-size: 0.9rem; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+}
+.mtx-btn-send:active { opacity: .8; }
+.mtx-btn-send:disabled { opacity: .45; cursor: default; }
+
+/* ---------- 时空回响：发现页二级（对象分组目录） ---------- */
+#page-mt-echo .mtx-echo-body {
+  padding: 14px 12px 60px;
+}
+.mtx-echo-sec-title {
+  font-size: 12.5px; color: var(--theme-subtext, #6f6888);
+  padding: 10px 4px 8px; font-weight: 600;
+}
+.mtx-echo-target {
+  display: flex; align-items: center; gap: 12px;
+  background: var(--theme-card-bg, #fff);
+  border: 1px solid var(--theme-border, rgba(120,100,160,.18));
+  border-radius: 14px; padding: 12px; margin-bottom: 9px; cursor: pointer;
+  transition: transform .12s;
+}
+.mtx-echo-target:active { transform: scale(.985); }
+.mtx-echo-avatar {
+  width: 44px; height: 44px; border-radius: 50%; flex: none;
+  background: linear-gradient(135deg, #9a7be8, #7a5ce0); color: #fff;
+  display: flex; align-items: center; justify-content: center; font-size: 17px; font-weight: 700;
+}
+.mtx-echo-info { flex: 1; min-width: 0; }
+.mtx-echo-name { font-size: 15px; font-weight: 600; color: var(--theme-text, #2b2440); }
+.mtx-echo-sub { font-size: 12px; color: var(--theme-subtext, #6f6888); margin-top: 3px; }
+.mtx-echo-arrow { color: var(--theme-subtext, #9a94b0); flex: none; }
+
+/* 二级：轮次列表 */
+.mtx-echo-sess {
+  display: flex; align-items: center; gap: 12px;
+  background: var(--theme-card-bg, #fff);
+  border: 1px solid var(--theme-border, rgba(120,100,160,.18));
+  border-radius: 14px; padding: 12px; margin-bottom: 9px; cursor: pointer;
+}
+.mtx-echo-sess-left {
+  width: 40px; height: 40px; border-radius: 12px; flex: none;
+  background: rgba(139,111,215,.12); color: #8b6fd7;
+  display: flex; align-items: center; justify-content: center; font-size: 16px;
+}
+.mtx-echo-sess-info { flex: 1; min-width: 0; }
+.mtx-echo-sess-title { font-size: 14px; font-weight: 600; color: var(--theme-text, #2b2440); }
+.mtx-echo-sess-sub { font-size: 12px; color: var(--theme-subtext, #6f6888); margin-top: 3px; }
+
+/* 三级：单轮回看（复用消息气泡样式） */
+#page-mt-echo-session .mtx-echo-play {
+  padding: 14px 12px 50px;
+}
+.mtx-empty-page {
+  text-align: center; color: var(--theme-subtext, #6f6888);
+  font-size: 13.5px; line-height: 2; padding: 60px 20px;
+}
+
+/* 顶栏：回响页继承主站 .top-nav 默认主题样式（深色文字/玻璃底），
+   不再强制白字与紫色渐变（历史踩坑：底部 mtx-fixed-top 误套渐变） */
+.mtx-fixed-top {
+  position: sticky; top: 0; z-index: 99;
+}
+.mtx-fixed-top .nav-title { color: inherit; }
+.mtx-fixed-top .back-btn { color: inherit; }
+.mtx-fixed-top .nav-action { color: inherit; }
+
+/* 任务1：传讯页激活时隐藏全局底栏，避免与传讯输入区重合（仅作用于传讯页） */
+#page-transmit.page.active ~ .bottom-nav { display: none; }
+
+/* 深色壁纸背景：与外部聊天 chat-room-bg-dark 同套——顶栏透明亮字、输入栏深色磨砂 */
+#page-transmit.chat-room-bg-dark .mtx-top-bar {
+  background: transparent;
+  backdrop-filter: none; -webkit-backdrop-filter: none;
+  color: rgba(255,255,255,.95);
+  border-bottom: none;
+}
+#page-transmit.chat-room-bg-dark .mtx-top-btn,
+#page-transmit.chat-room-bg-dark .mtx-settings-btn { background: rgba(255,255,255,.16); color: #fff; }
+#page-transmit.chat-room-bg-dark .mtx-input-zone {
+  background: rgba(0,0,0,.5);
+  backdrop-filter: var(--glass-blur, blur(20px) saturate(150%));
+  -webkit-backdrop-filter: var(--glass-blur, blur(20px) saturate(150%));
+  border-top: 1px solid rgba(255,255,255,.08);
+}
+#page-transmit.chat-room-bg-dark .mtx-input { color: rgba(255,255,255,.92); }
+#page-transmit.chat-room-bg-dark .mtx-input::placeholder { color: rgba(255,255,255,.5); }
+#page-transmit.chat-room-bg-dark .mtx-input-btn { color: rgba(255,255,255,.85); }
+#page-transmit.chat-room-bg-dark .mtx-btn-send { background: var(--primary, #9a7be8); color: var(--text-on-primary, #fff); }
+#page-transmit.chat-room-bg-dark .mtx-top-sub { color: rgba(255,255,255,.75); }
+
+/* 任务3：多牌消息 .mt-cards 在气泡内横向滑动查看（气泡 overflow:visible 不裁切） */
+.mt-cards {
+  display: flex; gap: 7px; overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: 4px; max-width: 100%;
+}
+.mt-cards::-webkit-scrollbar { height: 5px; }
+.mt-cards::-webkit-scrollbar-thumb { background: rgba(120,100,160,.28); border-radius: 999px; }
+.mt-cards::-webkit-scrollbar-track { background: transparent; }
+
+/* 输出一键不用：传讯页无需大图预览，直接关闭系统默认 */
+.mtx-scroll img { -webkit-user-select: none; user-select: none; }
