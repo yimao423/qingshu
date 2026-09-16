@@ -1,0 +1,445 @@
+/* ============================================================
+ * pages-mt.css —— 次元镜界传讯 / 时空回响 专用样式（拾心界）
+ * 顶栏渐变只作用于真正的页面顶栏（.mtx-top-bar / 回响页 header），
+ * 不误套内容行，避免出现独立加深色带（规避历史踩坑）。
+ * 全程不依赖 Tailwind，显式 CSS 定位。
+ * ============================================================
+ * 2026-09-14 修复：全站不存在的 --theme-* 变量改为真实主题变量
+ * （--primary/--primary-rgb/--text-xx/--bg-card/--glass-xx/--bg-gradient 等），
+ * 使传讯页与弹窗颜色跟随外观主题，消除硬编码紫色。
+ * ============================================================
+ * 2026-09-15 重做：删除未使用的死样式（.mtx-seg* 分段切换、.mt-msg* 旧气泡、
+ * .mt-btn* 旧按钮、.mt-x-row.self/other、重复的 .mt-cards 定义），
+ * 只保留传讯 / 回响实际使用的选择器。
+ * ============================================================ */
+
+/* ---------- 遮罩容器与弹窗 ----------
+ * 2026-09-16 调整：
+ *  1) 弹窗改为点击后立即出现：去掉遮罩淡入动画，且邀请入口不再等待引擎握手；
+ *  2) 删除遮罩层的背景阴影/模糊，只保留弹窗本身（容器仅承担居中定位与层级）。 */
+.mtx-overlay {
+  position: fixed; inset: 0; z-index: 99999;
+  background: none;
+  backdrop-filter: none;
+  display: flex; align-items: center; justify-content: center;
+}
+
+.mtx-modal {
+  width: min(88vw, 560px);
+  max-height: 78vh;
+  overflow-y: auto;
+  background: #FFFFFF;
+  border: 1px solid rgba(0,0,0,.08);
+  border-radius: 20px;
+  padding: 18px 16px;
+  color: #1F2329;
+  box-shadow: 0 8px 32px rgba(0,0,0,.14);
+  box-sizing: border-box;
+}
+.mtx-modal-wide { width: min(92vw, 640px); }
+.mtx-modal-title {
+  font-size: 17px; font-weight: 700; text-align: center;
+  margin-bottom: 10px; color: #1F2329;
+}
+.mtx-modal-desc {
+  font-size: 13.5px; line-height: 1.7; text-align: center;
+  color: #4E5969; margin-bottom: 12px;
+}
+.mtx-modal-desc b { color: var(--primary, #4C9AFF); }
+.mtx-modal-actions {
+  display: flex; gap: 10px; justify-content: center; margin-top: 14px;
+}
+.mtx-btn {
+  border: none; border-radius: 999px; padding: 10px 22px;
+  font-size: 14px; cursor: pointer; transition: opacity .15s;
+  font-family: inherit;
+}
+.mtx-btn:active { opacity: .7; }
+.mtx-btn.primary {
+  background: linear-gradient(135deg, var(--primary, #4C9AFF), var(--primary-dark, #4C9AFF));
+  color: var(--text-on-primary, #fff); font-weight: 600;
+}
+.mtx-btn.ghost {
+  background: #F2F3F5; color: #4E5969;
+  border: 1px solid rgba(0,0,0,.10);
+}
+.mtx-btn.small { padding: 7px 16px; font-size: 13px; }
+.mtx-btn:disabled { opacity: .5; cursor: default; }
+
+/* ---------- 等待动画 ---------- */
+.mtx-wait { text-align: center; padding: 26px 16px; }
+.mtx-wait-spinner {
+  width: 42px; height: 42px; margin: 6px auto 14px;
+  border: 4px solid rgba(var(--primary-rgb, 76,154,255), .25);
+  border-top-color: var(--primary, #4C9AFF);
+  border-radius: 50%;
+  animation: mtxSpin 1s linear infinite;
+}
+@keyframes mtxSpin { to { transform: rotate(360deg); } }
+.mtx-wait-text { font-size: 15px; font-weight: 600; color: #1F2329; }
+.mtx-wait-sub { font-size: 12.5px; color: #4E5969; margin: 6px 0 18px; }
+
+/* ---------- 群聊邀请 ---------- */
+.mtx-invite-list { margin: 6px 0 4px; }
+.mtx-invite-member {
+  display: flex; align-items: center; gap: 10px;
+  padding: 9px 10px; border-radius: 12px;
+  background: rgba(var(--primary-rgb, 76,154,255), .06);
+  margin-bottom: 6px;
+}
+.mtx-invite-idx {
+  width: 22px; height: 22px; border-radius: 50%; flex: none;
+  background: linear-gradient(135deg, var(--primary, #4C9AFF), var(--primary-dark, #4C9AFF)); color: var(--text-on-primary, #fff);
+  font-size: 12px; display: flex; align-items: center; justify-content: center;
+}
+.mtx-invite-name { flex: 1; font-size: 14px; color: #1F2329; }
+.mtx-invite-tool { display: flex; gap: 6px; flex: none; }
+.mtx-mini-btn {
+  width: 26px; height: 26px; border-radius: 8px; border: 1px solid rgba(0,0,0,.15);
+  background: #F2F3F5; color: #4E5969; cursor: pointer; font-size: 12px;
+}
+.mtx-mini-btn:active { opacity: .6; }
+
+/* ---------- 牌组设置弹窗 ---------- */
+.mtx-field { margin-bottom: 12px; }
+.mtx-field-label {
+  font-size: 12.5px; color: #4E5969; margin-bottom: 7px; padding-left: 2px;
+}
+.mtx-deck-grid {
+  display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px;
+  max-height: 180px; overflow-y: auto; padding: 2px;
+}
+.mtx-deck-opt, .mtx-spread-opt {
+  display: flex; flex-direction: column; gap: 2px;
+  border: 1px solid rgba(var(--primary-rgb, 76,154,255), .28);
+  border-radius: 12px; padding: 9px 11px; cursor: pointer;
+  transition: all .15s;
+}
+.mtx-deck-opt:has(input:checked), .mtx-spread-opt:has(input:checked) {
+  border-color: var(--primary, #4C9AFF); background: rgba(var(--primary-rgb, 76,154,255), .1);
+}
+.mtx-deck-opt input, .mtx-spread-opt input { display: none; }
+.mtx-deck-name { font-size: 13.5px; font-weight: 600; color: #1F2329; }
+.mtx-deck-en { font-size: 11px; color: #4E5969; }
+.mtx-spread-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
+.mtx-spread-opt { flex-direction: row; align-items: center; justify-content: space-between; padding: 10px 12px; }
+.mtx-spread-opt span { font-size: 13.5px; color: #1F2329; }
+.mtx-spread-count { font-size: 11.5px !important; color: #4E5969 !important; }
+.mtx-rev-field { margin-top: 2px; }
+.mtx-rev { display: flex; align-items: center; gap: 8px; font-size: 13.5px; color: #1F2329; cursor: pointer; }
+.mtx-rev input { width: 17px; height: 17px; accent-color: var(--primary, #4C9AFF); }
+.mtx-empty { font-size: 13px; color: #4E5969; padding: 12px 0; text-align: center; }
+
+/* ---------- 传讯页面（全屏，顶栏/输入栏与外部聊天沉浸式规则一致） ---------- */
+/* 背景跟随外观主题：与外部聊天 .page-fullscreen 同源 --bg-gradient，默认(跟随主题)时随主题变色 */
+#page-transmit .mtx-chat {
+  position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+  display: flex; flex-direction: column; background: var(--bg-gradient, var(--bg-main, #f5f5f7));
+  z-index: 50;
+}
+/* 顶栏：与外部聊天 .chat-room-topbar 一致——透明沉浸，背景透过，无底色/边框/阴影 */
+.mtx-top-bar {
+  flex: none;
+  display: flex; align-items: center; gap: 8px;
+  height: 48px; padding: 0 12px;
+  background: transparent;
+  backdrop-filter: none; -webkit-backdrop-filter: none;
+  color: var(--text-dark, #333);
+  border-bottom: none;
+  box-shadow: none;
+  z-index: 10;
+}
+.mtx-top-bar .mtx-top-title,
+.mtx-top-bar .mtx-top-sub,
+.mtx-top-bar .mtx-top-btn { text-shadow: 0 1px 2px rgba(0,0,0,.14); }
+.mtx-top-title { flex: 1; text-align: center; font-size: 16px; font-weight: 700; color: inherit; }
+.mtx-top-sub { text-align: center; font-size: 11px; opacity: .8; margin-top: 1px; }
+.mtx-top-btn {
+  width: 32px; height: 32px; flex: none;
+  border: none; background: rgba(var(--primary-rgb, 76,154,255), .1); border-radius: 50%;
+  color: inherit; font-size: 14px; cursor: pointer; display: flex; align-items: center; justify-content: center;
+}
+.mtx-top-btn:active { opacity: .7; }
+.mtx-top-center { flex: 1; }
+.mtx-settings-btn {
+  width: 32px; height: 32px; padding: 0; border-radius: 50%; gap: 0; font-size: 16px;
+  background: rgba(var(--primary-rgb, 76,154,255), .12); color: #000 !important;
+}
+
+/* 消息流 */
+.mtx-scroll {
+  flex: 1; overflow-y: auto; padding: 14px 14px 10px; -webkit-overflow-scrolling: touch;
+}
+.mt-x-row { display: flex; margin-bottom: 12px; }
+.mt-x-row.system { justify-content: center; }
+.mt-system {
+  font-size: 12px; color: var(--text-medium, #666);
+  background: rgba(var(--primary-rgb, 76,154,255), .08);
+  padding: 5px 14px; border-radius: 999px; max-width: 80%; text-align: center;
+}
+.mt-msg-q { font-size: 12px; color: var(--text-medium, #666); margin-bottom: 8px; padding: 5px 9px; background: rgba(var(--primary-rgb, 76,154,255), .06); border-radius: 8px; }
+
+/* 多牌横排卡带：flex + overflow-x auto，气泡内左右滑动查看 */
+.mt-cards {
+  display: flex; gap: 7px; overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: 4px; max-width: 100%;
+}
+.mt-cards::-webkit-scrollbar { height: 5px; }
+.mt-cards::-webkit-scrollbar-thumb { background: rgba(var(--primary-rgb, 76,154,255), .28); border-radius: 999px; }
+.mt-cards::-webkit-scrollbar-track { background: transparent; }
+/* 牌卡：无边框、无圆角、无底色，按原始比例原样展示牌面图片本身 */
+.mt-card { flex: none; width: 96px; }
+.mt-card-img-wrap {
+  width: 96px; height: auto; border-radius: 0; overflow: visible;
+  box-shadow: none; background: transparent;
+  position: relative;
+  /* 正/逆位标签水平居中于牌面正下方（img 为 block 不受影响，仅居中 inline 标签） */
+  text-align: center;
+}
+/* 正逆位由牌面图片自身方向表达（绘制端已按 reversed 旋转），不再叠加 CSS 旋转 */
+.mt-card-orient {
+  display: inline-block; margin-top: 3px; padding: 1px 7px;
+  font-size: 10px; line-height: 1.5; border-radius: 999px; color: #fff;
+  background: rgba(0,0,0,.55); white-space: nowrap;
+}
+.mt-card-orient.up { background: rgba(0,0,0,.55); }
+.mt-card-orient.rev { background: rgba(139,69,19,.85); }
+.mt-card-img { width: 100%; height: auto; object-fit: contain; display: block; }
+
+/* 输入区：与外部聊天 .chat-input-zone/.chat-input-bar 一致——透明沉浸无白底无分隔线 */
+.mtx-input-zone {
+  flex: none;
+  display: flex; align-items: center; gap: 6px;
+  padding: 8px 12px calc(8px + env(safe-area-inset-bottom, 0px));
+  background: transparent;
+  backdrop-filter: none; -webkit-backdrop-filter: none;
+  border-top: none;
+  flex-shrink: 0;
+}
+/* 输入栏左侧图标按钮（背景设置入口），与外部 .input-btn 一致 */
+.mtx-input-btn {
+  width: 36px; height: 36px; flex: none;
+  border: none; background: transparent; border-radius: 50%;
+  cursor: pointer; font-size: 1.22rem;
+  color: var(--text-medium, #666);
+  display: flex; align-items: center; justify-content: center;
+}
+.mtx-input-btn:active { opacity: .7; }
+.mtx-input {
+  flex: 1; resize: none; border: none; border-radius: 5px;
+  background: transparent;
+  color: var(--text-dark, #333); font-size: 15px; line-height: 1.5;
+  padding: 9px 14px; max-height: 96px; min-height: 40px; outline: none;
+  font-family: inherit;
+}
+.mtx-input:focus { background: transparent; }
+.mtx-input::placeholder { color: var(--text-light, #888); }
+.mtx-btn-send {
+  flex: none; width: 36px; height: 36px; border-radius: 50%;
+  border: none; background: var(--primary, #4C9AFF);
+  color: var(--text-on-primary, #fff); font-size: 0.9rem; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+}
+.mtx-btn-send:active { opacity: .8; }
+.mtx-btn-send:disabled { opacity: .45; cursor: default; }
+
+/* ---------- 时空回响：发现页二级（对象分组目录） ---------- */
+#page-mt-echo .mtx-echo-body,
+#page-mt-echo-session-list .mtx-echo-body {
+  padding: 14px 12px 60px;
+}
+.mtx-echo-sec-title {
+  font-size: 12.5px; color: var(--text-medium, #666);
+  padding: 10px 4px 8px; font-weight: 600;
+}
+.mtx-echo-target {
+  display: flex; align-items: center; gap: 12px;
+  background: rgba(255,255,255,.55);
+  border: 1px solid var(--border-light, rgba(0,0,0,.08));
+  border-radius: 14px; padding: 12px; margin-bottom: 9px; cursor: pointer;
+  transition: transform .12s;
+  box-shadow: 0 1px 4px rgba(0,0,0,.05);
+}
+.mtx-echo-target:active { transform: scale(.985); }
+.mtx-echo-avatar {
+  width: 44px; height: 44px; border-radius: 50%; flex: none;
+  background: linear-gradient(135deg, var(--primary, #4C9AFF), var(--primary-dark, #4C9AFF)); color: var(--text-on-primary, #fff);
+  display: flex; align-items: center; justify-content: center; font-size: 17px; font-weight: 700;
+  overflow: hidden;
+}
+.mtx-echo-avatar img {
+  width: 100%; height: 100%; object-fit: cover; display: block; border-radius: 50%;
+}
+.mtx-echo-avatar .mtx-echo-avatar-text {
+  width: 100%; height: 100%;
+  display: flex; align-items: center; justify-content: center;
+}
+.mtx-echo-info { flex: 1; min-width: 0; }
+.mtx-echo-name { font-size: 15px; font-weight: 600; color: var(--text-dark, #333); }
+.mtx-echo-sub { font-size: 12px; color: var(--text-medium, #666); margin-top: 3px; }
+.mtx-echo-arrow { color: var(--text-light, #888); flex: none; }
+
+/* 二级：轮次列表 */
+.mtx-echo-sess {
+  display: flex; align-items: center; gap: 12px;
+  background: rgba(255,255,255,.55);
+  border: 1px solid var(--border-light, rgba(0,0,0,.08));
+  border-radius: 14px; padding: 12px; margin-bottom: 9px; cursor: pointer;
+  box-shadow: 0 1px 4px rgba(0,0,0,.05);
+}
+.mtx-echo-sess-left {
+  width: 40px; height: 40px; border-radius: 12px; flex: none;
+  background: rgba(var(--primary-rgb, 76,154,255), .12); color: var(--primary, #4C9AFF);
+  display: flex; align-items: center; justify-content: center; font-size: 16px;
+}
+.mtx-echo-sess-info { flex: 1; min-width: 0; }
+.mtx-echo-sess-title { font-size: 14px; font-weight: 600; color: var(--text-dark, #333); }
+.mtx-echo-sess-sub { font-size: 12px; color: var(--text-medium, #666); margin-top: 3px; }
+
+/* 轮次删除按钮：对齐「他的收藏」条目删除交互（圆形浅底垃圾桶，浅蓝主色） */
+.mtx-echo-sess-remove {
+  width: 30px; height: 30px; border-radius: 50%; border: none; flex: none;
+  background: rgba(var(--primary-rgb, 76,154,255), .1);
+  color: var(--primary, #4C9AFF);
+  cursor: pointer; font-size: 0.78rem;
+  display: flex; align-items: center; justify-content: center;
+  transition: all .2s;
+}
+.mtx-echo-sess-remove:hover {
+  background: rgba(var(--primary-rgb, 76,154,255), .2);
+}
+
+/* 三级：单轮回看（复用消息气泡样式） */
+#page-mt-echo-session .mtx-echo-play {
+  padding: 14px 12px 50px;
+}
+.mtx-empty-page {
+  text-align: center; color: var(--text-medium, #666);
+  font-size: 13.5px; line-height: 2; padding: 60px 20px;
+}
+
+/* 顶栏：回响页继承主站 .top-nav 默认主题样式（深色文字/玻璃底），
+   不再强制白字与紫色渐变（历史踩坑：底部 mtx-fixed-top 误套渐变） */
+.mtx-fixed-top {
+  position: sticky; top: 0; z-index: 99;
+}
+.mtx-fixed-top .nav-title { color: inherit; }
+.mtx-fixed-top .back-btn { color: inherit; }
+/* 删除图标保持与「他的收藏」顶栏同款浅蓝主色（不被 inherit 拉成深灰） */
+.mtx-fixed-top .nav-action { color: var(--primary, #4C9AFF); }
+
+/* 任务1：传讯页激活时隐藏全局底栏，避免与传讯输入区重合（仅作用于传讯页） */
+#page-transmit.page.active ~ .bottom-nav { display: none; }
+
+/* 深色壁纸背景：与外部聊天 chat-room-bg-dark 同套——顶栏透明亮字、输入栏深色磨砂 */
+#page-transmit.chat-room-bg-dark .mtx-top-bar {
+  background: transparent;
+  backdrop-filter: none; -webkit-backdrop-filter: none;
+  color: rgba(255,255,255,.95);
+  border-bottom: none;
+}
+#page-transmit.chat-room-bg-dark .mtx-top-btn,
+#page-transmit.chat-room-bg-dark .mtx-settings-btn { background: rgba(255,255,255,.16); color: #fff; }
+#page-transmit.chat-room-bg-dark .mtx-input-zone {
+  background: rgba(0,0,0,.5);
+  backdrop-filter: var(--glass-blur, blur(20px) saturate(150%));
+  -webkit-backdrop-filter: var(--glass-blur, blur(20px) saturate(150%));
+  border-top: 1px solid rgba(255,255,255,.08);
+}
+#page-transmit.chat-room-bg-dark .mtx-input { color: rgba(255,255,255,.92); }
+#page-transmit.chat-room-bg-dark .mtx-input::placeholder { color: rgba(255,255,255,.5); }
+#page-transmit.chat-room-bg-dark .mtx-input-btn { color: rgba(255,255,255,.85); }
+#page-transmit.chat-room-bg-dark .mtx-btn-send { background: var(--primary, #4C9AFF); color: var(--text-on-primary, #fff); }
+#page-transmit.chat-room-bg-dark .mtx-top-sub { color: rgba(255,255,255,.75); }
+
+/* 传讯页无需大图预览，直接关闭系统默认 */
+.mtx-scroll img { -webkit-user-select: none; user-select: none; }
+
+/* ===== 洗牌抽牌动画：发问后 → 对方回答前（仅实时传讯页；不入库、回看不播放） ===== */
+.mt-shuffle { padding: 4px 2px; text-align: center; }
+.mt-shuffle-cards {
+  display: flex; justify-content: center; align-items: center; gap: 8px;
+  min-height: 78px; perspective: 700px;
+}
+.mt-shuffle-card {
+  --sw: 52px; --sh: 74px; --gx: 0px; --grow: .92; --d: 0s;
+  width: var(--sw); height: var(--sh); flex: none; position: relative;
+  border-radius: 9px;
+  background: linear-gradient(135deg, var(--primary-light, #D8ECD8) 0%, var(--primary, #B0D8C0) 50%, var(--primary-light, #D8ECD8) 100%);
+  border: 1px solid rgba(255,255,255,.4);
+  box-shadow: 0 4px 14px rgba(var(--primary-rgb, 176,216,192), .35), inset 0 0 0 3px rgba(255,255,255,.35), inset 0 0 10px rgba(255,255,255,.28);
+  transform-style: preserve-3d;
+  animation: mtShuffleJitter .5s ease-in-out infinite alternate;
+}
+.mt-shuffle-card::before,
+.mt-shuffle-card::after {
+  position: absolute; inset: 0; border-radius: 9px;
+  display: flex; align-items: center; justify-content: center;
+  backface-visibility: hidden; -webkit-backface-visibility: hidden;
+}
+.mt-shuffle-card::after {                 /* 牌背 */
+  content: '✦';
+  background: linear-gradient(135deg, var(--primary-light, #D8ECD8) 0%, var(--primary, #B0D8C0) 50%, var(--primary-light, #D8ECD8) 100%);
+  color: rgba(255,255,255,.95); font-size: 17px; text-shadow: 0 1px 3px rgba(var(--primary-rgb, 176,216,192), .45);
+}
+.mt-shuffle-card::before {                /* 牌面（亮出阶段翻转后可见） */
+  content: '✦';
+  background: linear-gradient(160deg, #ffffff 0%, var(--primary-bg, #F0F6FA) 100%);
+  color: var(--text-dark, #7B5FE8); font-size: 21px;
+  transform: rotateY(180deg);
+}
+/* 深色主题（white/black）主色本身偏深，牌背统一提亮，避免偏黑 */
+[data-theme="white"] .mt-shuffle-card,
+[data-theme="black"] .mt-shuffle-card,
+[data-theme="white"] .mt-shuffle-card::after,
+[data-theme="black"] .mt-shuffle-card::after {
+  background: linear-gradient(135deg, #A6A6AE 0%, #82828F 50%, #A6A6AE 100%);
+  background: linear-gradient(135deg, color-mix(in srgb, var(--primary-light) 60%, white) 0%, color-mix(in srgb, var(--primary) 45%, white) 50%, color-mix(in srgb, var(--primary-light) 60%, white) 100%);
+}
+@keyframes mtShuffleJitter {
+  from { transform: translateX(-3px) rotate(-3deg); }
+  to   { transform: translateX(3px) rotate(3deg); }
+}
+/* 阶段二：抽牌聚拢——两侧向中间收拢、中间牌轻微放大（各卡位移见 nth-child） */
+.mt-shuffle.phase-draw .mt-shuffle-card { animation: mtShuffleGather .9s ease-in-out forwards; }
+.mt-shuffle.phase-draw .mt-shuffle-card:nth-child(1) { --gx: 34px; --d: 0s; }
+.mt-shuffle.phase-draw .mt-shuffle-card:nth-child(2) { --gx: 15px; --d: .05s; }
+.mt-shuffle.phase-draw .mt-shuffle-card:nth-child(4) { --gx: -15px; --d: .05s; }
+.mt-shuffle.phase-draw .mt-shuffle-card:nth-child(5) { --gx: -34px; --d: 0s; }
+.mt-shuffle.phase-draw .mt-shuffle-card:nth-child(3) { --gx: 0px; --d: .12s; --grow: 1.12; }
+@keyframes mtShuffleGather {
+  from { transform: translateX(0) rotate(0) scale(1); }
+  to   { transform: translateX(var(--gx, 0px)) rotate(0) scale(var(--grow, .92)); }
+}
+/* 阶段三：亮出牌面——中间牌翻转亮面，两侧淡出收拢 */
+.mt-shuffle.phase-reveal .mt-shuffle-card { transition: opacity .55s ease; }
+.mt-shuffle.phase-reveal .mt-shuffle-card:not(:nth-child(3)) {
+  opacity: 0; transform: translateX(var(--gx, 0px)) scale(.88);
+}
+.mt-shuffle.phase-reveal .mt-shuffle-card:nth-child(3) {
+  animation: mtShuffleFlip .62s .08s ease forwards;
+}
+@keyframes mtShuffleFlip {
+  0%   { transform: rotateY(0deg) scale(var(--grow, 1.12)); }
+  100% { transform: rotateY(180deg) scale(1.18); }
+}
+/* 思考文案：随动画阶段切换（洗牌 → 抽牌 → 浮现） */
+.mt-shuffle-text {
+  margin-top: 9px; font-size: 12.5px; letter-spacing: 1.5px;
+  color: var(--text-medium, #777);
+  animation: mtShuffleTextIn .45s ease;
+}
+@keyframes mtShuffleTextIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+/* 结束淡出后由 JS 移除动画行 */
+.mt-shuffle-row.mt-shuffle-done .mt-shuffle {
+  opacity: 0; transform: translateY(-4px) scale(.98);
+  transition: opacity .3s ease, transform .3s ease;
+}
+/* 深色背景适配 */
+#page-transmit.chat-room-bg-dark .mt-shuffle-text { color: rgba(255,255,255,.72); }
+/* PC 布局放大 */
+@media (min-width: 768px) {
+  .mt-shuffle-card { --sw: 60px; --sh: 84px; }
+  .mt-shuffle-cards { gap: 10px; min-height: 90px; }
+}
